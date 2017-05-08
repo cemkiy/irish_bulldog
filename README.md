@@ -1,7 +1,7 @@
 # Irish Bulldog
-[x] Calculate fighter statistics 
-[x] Calculate fight statistics
-[ ] Calculate money in your pocket(in development)
+- [x] Calculate fighter statistics
+- [x] Calculate fight statistics
+- [ ] Calculate money in your pocket(in development)
 
 # How to work?
 - Get last event(figt night) from UFC
