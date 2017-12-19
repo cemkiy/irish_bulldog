@@ -2,14 +2,17 @@ import json
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
+
 def getStatusFightsbyFighter(fighter):
-    fighterResponse = urlopen("http://ufc-data-api.ufc.com/api/v1/us/fighters/"+str(fighter["id"])).read()
+    fighterResponse = urlopen(
+        "http://ufc-data-api.ufc.com/api/v1/us/fighters/" + str(fighter["id"])).read()
     soup = BeautifulSoup(fighterResponse, 'html.parser')
-    fightsStatuses = soup.findAll("img", { "class" : "fight-result-flag" })
+    fightsStatuses = soup.findAll("img", {"class": "fight-result-flag"})
 
     fighter["statuses"] = []
     for fightsStatus in fightsStatuses:
         fighter["statuses"].append(fightsStatus.get('alt', ''))
+
 
 def getFighterScore(fighter):
     fighter["score"] = fighter["wins"] - fighter["losses"]
@@ -25,16 +28,19 @@ def getFighterScore(fighter):
         fighter["score"] += 2
 
 
-fightersResponse = urlopen("http://ufc-data-api.ufc.com/api/v1/us/fighters").read().decode('utf8')
+fightersResponse = urlopen(
+    "http://ufc-data-api.ufc.com/api/v1/us/fighters").read().decode('utf8')
 fighters = json.loads(fightersResponse)
 
-eventsResponse = urlopen("http://ufc-data-api.ufc.com/api/v1/us/events").read().decode('utf8')
+eventsResponse = urlopen(
+    "http://ufc-data-api.ufc.com/api/v1/us/events").read().decode('utf8')
 events = json.loads(eventsResponse)
-last_event = urlopen("http://ufc-data-api.ufc.com/api/v1/us/events/"+str(events[0]["id"])).read()
+last_event = urlopen(
+    "http://ufc-data-api.ufc.com/api/v1/us/events/" + str(events[0]["id"])).read()
 
 soup = BeautifulSoup(last_event, 'html.parser')
-reds = soup.findAll("h1", { "class" : "fighter-name-red" })
-blues = soup.findAll("h1", { "class" : "fighter-name-blue" })
+reds = soup.findAll("h1", {"class": "fighter-name-red"})
+blues = soup.findAll("h1", {"class": "fighter-name-blue"})
 
 fights = []
 for i in range(0, len(reds)):
@@ -52,8 +58,14 @@ for i in range(0, len(reds)):
             fight["blue"] = fighter
 
     fights.append(fight)
-
+print (fights[0])
 for fight in fights:
-    red = (fight["red"]["score"]*100)/(fight["red"]["score"]+fight["blue"]["score"])
-    blue = (fight["blue"]["score"]*100)/(fight["red"]["score"]+fight["blue"]["score"])
-    print(fight["red"]["last_name"] + ":" + str(round(red,2)) + "------" + fight["blue"]["last_name"] + ":" + str(round(blue,2)))
+    try:
+        red = (fight["red"]["score"] * 100) / \
+            (fight["red"]["score"] + fight["blue"]["score"])
+        blue = (fight["blue"]["score"] * 100) / \
+            (fight["red"]["score"] + fight["blue"]["score"])
+        print(fight["red"]["last_name"] + ":" + str(round(red, 2)) +
+              "------" + fight["blue"]["last_name"] + ":" + str(round(blue, 2)))
+    except:
+        print(fight, "\n")
